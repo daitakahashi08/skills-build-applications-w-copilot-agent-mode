@@ -1,14 +1,18 @@
 import express from 'express';
+import { apiPort, getApiBaseUrl } from './config/api.js';
 import db from './config/database.js';
+import apiRouter from './routes/api.js';
 
 const app = express();
-const port = Number(process.env.PORT ?? 8000);
+const port = apiPort;
 
 app.use(express.json());
+app.use('/api', apiRouter);
 
 app.get('/api/health', (_request, response) => {
   response.json({
     status: 'ok',
+    apiBaseUrl: getApiBaseUrl(),
     database: db.readyState === 1 ? 'connected' : 'connecting',
   });
 });
